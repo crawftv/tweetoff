@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Tweetoff!</title>
+        <link rel="stylesheet" href="https://unpkg.com/picnic">
+    </head>
+    
+    <body>
+        <h1>Tweetoff!</h1>
+        <h3>{{user.name}}</h3>
+        <ul>
+            {% for tweet in tweets %}
+            <li>{{ tweet.text}}</li>
+            {% endfor %}
+        </ul>
+           
+           
+        
+    
+    </body>
+    
+
+
+
+</html>
