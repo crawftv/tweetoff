@@ -4,6 +4,12 @@ from decouple import config
 from flask import Flask,render_template, request
 from .models import DB, User,Tweet
 
+from .predict import predict_user
+from .twitter import add_or_update_user
+
+
+
+
 def create_app():
     """Create and configure app"""
     app = Flask(__name__)
@@ -17,14 +23,33 @@ def create_app():
         users = User.query.all()
         return render_template('base.html', title ="Home",users= users) 
 
+    @app.route('/user',methods=['POST'])
+    @app.route('/user/<name>',methods=["GET"])
+    def user(name=None):
+        message = ''
+        name = name or request.values['user_name']
 
-    @app.route('/user/<name>')
-    def view_user(name):
-        user = User.query.filter_by(name=name).first()
-        uid = user.id
-        tweets = Tweet.query.filter_by(user_id=uid).all()
-        return render_template('user.html',title="Tweets", user = user,tweets=tweets)
+        try:
+            if request.method == 'POST':
+               add_or_update_user(name)
+        
+               message = 'User {} successfully added!'.format(name)
+            tweets = User.query.filter(User.name == name).one().tweets
+        except Exception as e:
+            message = 'Error adding {}" {}'.format(name,e)
+            tweets = []
+        return render_template('user1.html',title=name, tweets=tweets,
+            message=message)
    
+    @app.route('/compare',methods=['POST'])
+    def compare():
+        user1, user2 = request.values['user1'], request.values['user2']
+        if user1 == user2:
+            return 'Cannot compare a user to themselves'
+        else:
+            prediction = predict_user(user1, user2, request.values['tweet_text'])
+            return user1 if prediction else user2
+
 
     @app.route('/reset')
     def reset():

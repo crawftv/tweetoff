@@ -6,7 +6,7 @@ class User(DB.Model):
     """twitter users that we pull and analyze tweets"""
     id = DB.Column(DB.BigInteger,primary_key = True)
     name = DB.Column(DB.String(15), nullable=False)
-    newest_tweet_id = (DB.BigInteger) 
+    newest_tweet_id = DB.Column(DB.BigInteger) 
     
     def __repr__(self):
         return '<User {}>'.format(self.name)
