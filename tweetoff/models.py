@@ -12,7 +12,7 @@ class User(DB.Model):
         return '<User {}>'.format(self.name)
 
 class Tweet(DB.Model):
-    id = DB.Column(DB.Integer, primary_key = True)
+    id = DB.Column(DB.BigInteger, primary_key = True)
     text = DB.Column(DB.Unicode(500))
     embedding = DB.Column(DB.PickleType, nullable=False)
     user_id = DB.Column(DB.BigInteger, DB.ForeignKey('user.id'), nullable=False)
